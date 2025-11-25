@@ -54,6 +54,8 @@ public class TasksController : Controller
         {
             // Por enquanto, usar ID de usuário padrão (sem autenticação)
             task.UserId = "default-user";
+            task.CreatedAt = DateTime.UtcNow;
+            task.UpdatedAt = DateTime.UtcNow;
             await _taskService.CreateTaskAsync(task);
             TempData["Success"] = "Tarefa criada com sucesso!";
             return RedirectToAction(nameof(Index));

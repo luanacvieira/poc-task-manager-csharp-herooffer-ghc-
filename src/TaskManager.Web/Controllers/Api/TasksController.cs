@@ -6,12 +6,12 @@ namespace TaskManager.Web.Controllers.Api;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TasksController : ControllerBase
+public class TasksApiController : ControllerBase
 {
     private readonly ITaskService _taskService;
-    private readonly ILogger<TasksController> _logger;
+    private readonly ILogger<TasksApiController> _logger;
 
-    public TasksController(ITaskService taskService, ILogger<TasksController> logger)
+    public TasksApiController(ITaskService taskService, ILogger<TasksApiController> logger)
     {
         _taskService = taskService;
         _logger = logger;

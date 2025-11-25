@@ -16,10 +16,8 @@ public class TaskItem
     [StringLength(2000, ErrorMessage = "A descrição deve ter no máximo 2000 caracteres")]
     public string? Description { get; set; }
 
-    [Required]
     public Priority Priority { get; set; } = Priority.Medium;
 
-    [Required]
     public Category Category { get; set; } = Category.Other;
 
     [DataType(DataType.Date)]

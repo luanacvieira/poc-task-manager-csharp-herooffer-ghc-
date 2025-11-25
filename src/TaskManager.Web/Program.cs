@@ -8,9 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Adicionar suporte a controllers API
-builder.Services.AddControllers();
-
 // Configurar Entity Framework Core com SQL Server LocalDB
 builder.Services.AddDbContext<TaskManagerDbContext>(options =>
     options.UseSqlServer(
@@ -38,7 +35,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Desabilitado para evitar erro de redirecionamento
 app.UseRouting();
 
 app.UseAuthorization();
@@ -50,7 +47,7 @@ app.MapControllerRoute(
     pattern: "{controller=Tasks}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// Mapear controllers API
-app.MapControllers();
+// Desabilitado para evitar conflito de rotas com MVC
+// app.MapControllers();
 
 app.Run();

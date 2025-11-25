@@ -1,9 +1,7 @@
 @model IEnumerable<TaskManager.Web.Models.TaskItem>
-@using TaskManager.Web.Services
 
 @{
     ViewData["Title"] = "Gerenciador de Tarefas";
-    var statistics = ViewBag.Statistics as TaskStatistics;
 }
 
 <div class="container mt-4">
@@ -22,44 +20,6 @@
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             @TempData["Error"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    @if (statistics != null)
-    {
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Total</h5>
-                        <p class="card-text display-6">@statistics.Total</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Concluídas</h5>
-                        <p class="card-text display-6 text-success">@statistics.Completed</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Pendentes</h5>
-                        <p class="card-text display-6 text-warning">@statistics.Pending</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Urgentes Ativas</h5>
-                        <p class="card-text display-6 text-danger">@statistics.UrgentActive</p>
-                    </div>
-                </div>
-            </div>
         </div>
     }
 

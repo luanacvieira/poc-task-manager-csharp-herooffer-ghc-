@@ -61,12 +61,10 @@ public class TaskManagerDbContext : DbContext
                 .IsRequired();
 
             entity.Property(e => e.CreatedAt)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
+                .IsRequired();
 
             entity.Property(e => e.UpdatedAt)
-                .IsRequired()
-                .ValueGeneratedOnAddOrUpdate();
+                .IsRequired();
         });
     }
 

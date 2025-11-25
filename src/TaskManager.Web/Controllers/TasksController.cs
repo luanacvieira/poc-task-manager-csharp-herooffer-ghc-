@@ -21,9 +21,6 @@ public class TasksController : Controller
         try
         {
             var tasks = await _taskService.GetAllTasksAsync();
-            var statistics = await _taskService.GetStatisticsAsync();
-            
-            ViewBag.Statistics = statistics;
             return View(tasks);
         }
         catch (Exception ex)
@@ -54,6 +51,8 @@ public class TasksController : Controller
         {
             // Por enquanto, usar ID de usuário padrão (sem autenticação)
             task.UserId = "default-user";
+            task.CreatedAt = DateTime.UtcNow;
+            task.UpdatedAt = DateTime.UtcNow;
             await _taskService.CreateTaskAsync(task);
             TempData["Success"] = "Tarefa criada com sucesso!";
             return RedirectToAction(nameof(Index));

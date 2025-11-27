@@ -1,31 +1,11 @@
-name: dotnet-tests
+name: Run Reusable Dotnet Tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  push:                       # dispara em push para qualquer branch
+  pull_request:               # dispara em PRs de qualquer branch
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x' # ou versão que você usar
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-#      - name: Build solution
-#        run: dotnet build --no-restore --configuration Release
-
-      - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+  call-dotnet-tests:
+    uses: org-name/github-standards/.github/workflows/dotnet-tests.yml@main
+    with:
+      branch: ${{ github.ref_name }}  # passa a branch atual para o reusable

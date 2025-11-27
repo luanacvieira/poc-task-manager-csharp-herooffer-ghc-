@@ -6,6 +6,6 @@ on:
 
 jobs:
   call-dotnet-tests:
-    uses: org-name/github-standards/.github/workflows/dotnet-tests.yml@main
+    uses: empreendimentopaguemenossa/github-standards-reusables/.github/workflows/dotnet-tests.yml@main
     with:
       branch: ${{ github.ref_name }}  # passa a branch atual para o reusable!!!

@@ -1,0 +1,11 @@
+name: Run Reusable Dotnet Tests
+
+on:
+  push:                       # dispara em push para qualquer branch
+  pull_request:               # dispara em PRs de qualquer branch
+
+jobs:
+  call-dotnet-tests:
+    uses: org-name/github-standards/.github/workflows/dotnet-tests.yml@main
+    with:
+      branch: ${{ github.ref_name }}  # passa a branch atual para o reusable

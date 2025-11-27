@@ -8,7 +8,9 @@ jobs:
   call-dotnet-tests:
     permissions:
       contents: read
+      actions: read
     uses: empreendimentopaguemenossa/github-standards-reusables/.github/workflows/dotnet-tests.yml@main
     with:
       dotnet-version: '9.0.x'
-      configuration: 'Release' #comentario teste
+      configuration: 'Release'
+    secrets: inherit

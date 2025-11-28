@@ -1,0 +1,69 @@
+# Configuration for PR Labeler
+# https://github.com/actions/labeler
+
+# Labels para Controllers
+'area: controllers':
+  - changed-files:
+    - any-glob-to-any-file: 'TaskManager.Web/Controllers/**'
+
+# Labels para Models
+'area: models':
+  - changed-files:
+    - any-glob-to-any-file: 'TaskManager.Web/Models/**'
+
+# Labels para Services
+'area: services':
+  - changed-files:
+    - any-glob-to-any-file: 'TaskManager.Web/Services/**'
+
+# Labels para Repositories
+'area: repositories':
+  - changed-files:
+    - any-glob-to-any-file: 'TaskManager.Web/Repositories/**'
+
+# Labels para Data/Database
+'area: database':
+  - changed-files:
+    - any-glob-to-any-file: 'TaskManager.Web/Data/**'
+
+# Labels para Views
+'area: views':
+  - changed-files:
+    - any-glob-to-any-file: 'TaskManager.Web/Views/**'
+
+# Labels para Frontend (CSS/JS)
+'area: frontend':
+  - changed-files:
+    - any-glob-to-any-file: 
+      - 'TaskManager.Web/wwwroot/**'
+      - '**/*.css'
+      - '**/*.js'
+
+# Labels para Configuration
+'area: configuration':
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.json'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/appsettings*.json'
+      - '**/launchSettings.json'
+
+# Labels para Dependencies
+'dependencies':
+  - changed-files:
+    - any-glob-to-any-file: 
+      - '**/*.csproj'
+      - '**/packages.lock.json'
+
+# Labels para Documentation
+'documentation':
+  - changed-files:
+    - any-glob-to-any-file: 
+      - '**/*.md'
+      - '**/README*'
+
+# Labels para GitHub Actions/Workflows
+'area: ci/cd':
+  - changed-files:
+    - any-glob-to-any-file: '.github/**'

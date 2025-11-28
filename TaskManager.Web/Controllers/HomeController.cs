@@ -11,10 +11,12 @@ public class HomeController : Controller
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
+        _logger.LogInformation("HomeController initialized");
     }
 
     public IActionResult Index()
     {
+        _logger.LogInformation("Index page accessed");
         return View();
     }
 

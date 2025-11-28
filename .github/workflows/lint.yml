@@ -1,0 +1,16 @@
+name: Code Linting
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    uses: empreendimentopaguemenossa/github-standards-reusables/.github/workflows/reusable-lint.yml@main
+    permissions:
+      contents: read
+      statuses: write
+    with:
+      validate-all-codebase: false
+      default-branch: 'main'

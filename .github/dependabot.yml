@@ -1,4 +1,11 @@
 version: 2
+registries:
+  github-actions:
+    type: git
+    url: https://github.com
+    username: x-access-token
+    password: ${{secrets.DEPENDABOT_GITHUB_TOKEN}}
+
 updates:
   # Dependências .NET / NuGet
   - package-ecosystem: "nuget"
@@ -20,6 +27,8 @@ updates:
   # GitHub Actions workflows
   - package-ecosystem: "github-actions"
     directory: "/"
+    registries:
+      - github-actions
     schedule:
       interval: "weekly"
       day: "monday"

@@ -14,4 +14,3 @@ jobs:
     with:
       validate-all-codebase: false
       default-branch: 'main'
-      validate-markdown: false

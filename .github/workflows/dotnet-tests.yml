@@ -1,8 +1,13 @@
 name: Run Reusable Dotnet Tests
 
 on:
-  push:                       # dispara em push para qualquer branch
-  pull_request:               # dispara em PRs de qualquer branch
+  push:
+    branches:
+      - main                  # roda apenas em push para main
+  pull_request:
+    branches:
+      - main                  # roda em PRs para main
+    types: [opened, synchronize, reopened]
 
 jobs:
   call-dotnet-tests:

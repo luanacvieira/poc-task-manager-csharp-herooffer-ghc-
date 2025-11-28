@@ -1,5 +1,8 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Web.Data;
+using TaskManager.Web.Data.Interceptors;
+using TaskManager.Web.Mappings;
 using TaskManager.Web.Repositories;
 using TaskManager.Web.Services;
 
@@ -8,11 +11,27 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Configurar Entity Framework Core com SQL Server LocalDB
-builder.Services.AddDbContext<TaskManagerDbContext>(options =>
+// Configurar HttpContextAccessor para o interceptor de auditoria
+builder.Services.AddHttpContextAccessor();
+
+// Configurar interceptor de auditoria
+builder.Services.AddSingleton<AuditInterceptor>();
+
+// Configurar Entity Framework Core com SQL Server LocalDB e interceptor
+builder.Services.AddDbContext<TaskManagerDbContext>((serviceProvider, options) =>
+{
+    var auditInterceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions => sqlOptions.EnableRetryOnFailure()));
+        sqlOptions => sqlOptions.EnableRetryOnFailure())
+    .AddInterceptors(auditInterceptor);
+});
+
+// Configurar AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Configurar FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // Registrar repositórios e serviços
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
@@ -20,11 +39,14 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 
 var app = builder.Build();
 
-// Criar banco de dados se não existir e aplicar migrations
-using (var scope = app.Services.CreateScope())
+// Aplicar migrations automaticamente no startup (apenas em desenvolvimento)
+if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<TaskManagerDbContext>();
-    dbContext.Database.EnsureCreated();
+    
+    // Usar migrations ao invés de EnsureCreated
+    await dbContext.Database.MigrateAsync();
 }
 
 // Configure the HTTP request pipeline.

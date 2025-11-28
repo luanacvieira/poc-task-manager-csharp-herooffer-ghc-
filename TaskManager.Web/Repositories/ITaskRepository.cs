@@ -1,3 +1,4 @@
+using TaskManager.Web.Common;
 using TaskManager.Web.Models;
 
 namespace TaskManager.Web.Repositories;
@@ -8,6 +9,7 @@ namespace TaskManager.Web.Repositories;
 public interface ITaskRepository
 {
     Task<IEnumerable<TaskItem>> GetAllAsync();
+    Task<PaginatedResult<TaskItem>> GetPagedAsync(QueryParameters parameters);
     Task<TaskItem?> GetByIdAsync(long id);
     Task<TaskItem> CreateAsync(TaskItem task);
     Task<TaskItem?> UpdateAsync(TaskItem task);

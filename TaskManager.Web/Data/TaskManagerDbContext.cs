@@ -60,41 +60,44 @@ public class TaskManagerDbContext : DbContext
             entity.Property(e => e.Completed)
                 .IsRequired();
 
+            // Campos de auditoria
             entity.Property(e => e.CreatedAt)
                 .IsRequired();
 
             entity.Property(e => e.UpdatedAt)
                 .IsRequired();
+
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(100);
+
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(100);
+
+            // Controle de concorrência otimista
+            entity.Property(e => e.RowVersion)
+                .IsRowVersion();
+
+            // Índices para performance
+            entity.HasIndex(e => e.UserId)
+                .HasDatabaseName("IX_Tasks_UserId");
+
+            entity.HasIndex(e => e.Completed)
+                .HasDatabaseName("IX_Tasks_Completed");
+
+            entity.HasIndex(e => e.Priority)
+                .HasDatabaseName("IX_Tasks_Priority");
+
+            entity.HasIndex(e => e.Category)
+                .HasDatabaseName("IX_Tasks_Category");
+
+            entity.HasIndex(e => e.DueDate)
+                .HasDatabaseName("IX_Tasks_DueDate");
+
+            entity.HasIndex(e => new { e.UserId, e.Completed })
+                .HasDatabaseName("IX_Tasks_UserId_Completed");
+
+            entity.HasIndex(e => e.CreatedAt)
+                .HasDatabaseName("IX_Tasks_CreatedAt");
         });
-    }
-
-    public override int SaveChanges()
-    {
-        UpdateTimestamps();
-        return base.SaveChanges();
-    }
-
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        UpdateTimestamps();
-        return await base.SaveChangesAsync(cancellationToken);
-    }
-
-    private void UpdateTimestamps()
-    {
-        var entries = ChangeTracker.Entries<Models.TaskItem>();
-
-        foreach (var entry in entries)
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedAt = DateTime.UtcNow;
-                entry.Entity.UpdatedAt = DateTime.UtcNow;
-            }
-            else if (entry.State == EntityState.Modified)
-            {
-                entry.Entity.UpdatedAt = DateTime.UtcNow;
-            }
-        }
     }
 }

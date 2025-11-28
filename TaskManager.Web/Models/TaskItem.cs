@@ -36,7 +36,17 @@ public class TaskItem
 
     public bool Completed { get; set; }
 
+    // Campos de auditoria
     public DateTime CreatedAt { get; set; }
-
     public DateTime UpdatedAt { get; set; }
+    
+    [StringLength(100)]
+    public string? CreatedBy { get; set; }
+    
+    [StringLength(100)]
+    public string? UpdatedBy { get; set; }
+
+    // Controle de concorrência otimista
+    [Timestamp]
+    public byte[]? RowVersion { get; set; }
 }

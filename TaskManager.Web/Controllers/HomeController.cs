@@ -4,6 +4,9 @@ using TaskManager.Web.Models;
 
 namespace TaskManager.Web.Controllers;
 
+/// <summary>
+/// Controller principal da aplicação - gerencia página inicial e privacidade
+/// </summary>
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

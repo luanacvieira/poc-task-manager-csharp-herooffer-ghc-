@@ -1,15 +1,25 @@
-@model IEnumerable<TaskManager.Web.Models.TaskItem>
+@model IEnumerable<TaskManager.Web.DTOs.TaskDto>
 
 @{
     ViewData["Title"] = "Gerenciador de Tarefas";
 }
 
-<div class="container mt-4">
-    <h1>Gerenciador de Tarefas</h1>
+<!-- Header Section -->
+<div class="page-header">
+    <div class="container">
+        <h1>
+            <i class="bi bi-check2-square"></i>
+            Gerenciador de Tarefas
+        </h1>
+    </div>
+</div>
 
+<div class="container">
+    <!-- Alert Messages -->
     @if (TempData["Success"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i>
             @TempData["Success"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -18,68 +28,283 @@
     @if (TempData["Error"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i>
             @TempData["Error"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
 
-    <div class="mb-3">
-        <a asp-action="Create" class="btn btn-primary">Nova Tarefa</a>
+    <!-- Action Bar -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Nova Tarefa
+        </a>
+        <button id="toggleFilters" class="btn btn-outline-secondary">
+            <i class="bi bi-funnel"></i>
+            Filtros
+        </button>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Prioridade</th>
-                <th>Categoria</th>
-                <th>Data de Vencimento</th>
-                <th>Atribuída a</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
+    <!-- Filters Section -->
+    <div id="filtersSection" class="filters-section" style="display: none;">
+        <h5 class="mb-3"><i class="bi bi-sliders"></i> Filtrar Tarefas</h5>
+        <div class="filter-group">
+            <div class="filter-item">
+                <label for="filterPriority">Prioridade</label>
+                <select id="filterPriority" class="form-select">
+                    <option value="">Todas</option>
+                    <option value="Urgent">Urgente</option>
+                    <option value="High">Alta</option>
+                    <option value="Medium">Média</option>
+                    <option value="Low">Baixa</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filterCategory">Categoria</label>
+                <select id="filterCategory" class="form-select">
+                    <option value="">Todas</option>
+                    <option value="Work">Trabalho</option>
+                    <option value="Personal">Pessoal</option>
+                    <option value="Shopping">Compras</option>
+                    <option value="Health">Saúde</option>
+                    <option value="Other">Outro</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filterStatus">Status</label>
+                <select id="filterStatus" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="pending">Pendente</option>
+                    <option value="completed">Concluída</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filterSearch">Buscar</label>
+                <input type="text" id="filterSearch" class="form-control" placeholder="Digite para buscar...">
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks Container -->
+    <div id="tasksContainer" class="tasks-container">
+        @if (Model != null && Model.Any())
+        {
             @foreach (var task in Model)
             {
-                <tr>
-                    <td>@task.Title</td>
-                    <td>
-                        @switch (task.Priority)
+                <div class="task-card" 
+                     data-priority="@task.Priority" 
+                     data-category="@task.Category" 
+                     data-status="@(task.Completed ? "completed" : "pending")"
+                     data-title="@task.Title.ToLower()"
+                     data-description="@(task.Description?.ToLower() ?? "")">
+                    
+                    <div class="task-card-header">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                @if (task.Priority == TaskManager.Web.Models.Priority.Urgent)
+                                {
+                                    <span class="priority-badge priority-urgent">
+                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                        Urgente
+                                    </span>
+                                }
+                                else if (task.Priority == TaskManager.Web.Models.Priority.High)
+                                {
+                                    <span class="priority-badge priority-high">
+                                        <i class="bi bi-arrow-up-circle-fill"></i>
+                                        Alta
+                                    </span>
+                                }
+                                else if (task.Priority == TaskManager.Web.Models.Priority.Medium)
+                                {
+                                    <span class="priority-badge priority-medium">
+                                        <i class="bi bi-dash-circle-fill"></i>
+                                        Média
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="priority-badge priority-low">
+                                        <i class="bi bi-arrow-down-circle-fill"></i>
+                                        Baixa
+                                    </span>
+                                }
+                            </div>
+                            <div>
+                                @if (task.Completed)
+                                {
+                                    <span class="status-badge status-completed">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Concluída
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-pending">
+                                        <i class="bi bi-clock-fill"></i>
+                                        Pendente
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        <h3 class="task-card-title">
+                            @if (task.Completed)
+                            {
+                                <i class="bi bi-check-circle text-success"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-circle"></i>
+                            }
+                            @task.Title
+                        </h3>
+                    </div>
+
+                    <div class="task-card-body">
+                        @if (!string.IsNullOrEmpty(task.Description))
                         {
-                            case TaskManager.Web.Models.Priority.Urgent:
-                                <span class="badge bg-danger">Urgente</span>
-                                break;
-                            case TaskManager.Web.Models.Priority.High:
-                                <span class="badge bg-warning">Alta</span>
-                                break;
-                            case TaskManager.Web.Models.Priority.Medium:
-                                <span class="badge bg-info">Média</span>
-                                break;
-                            case TaskManager.Web.Models.Priority.Low:
-                                <span class="badge bg-secondary">Baixa</span>
-                                break;
+                            <p class="task-description">@task.Description</p>
                         }
-                    </td>
-                    <td>@task.Category</td>
-                    <td>@(task.DueDate?.ToString("dd/MM/yyyy") ?? "-")</td>
-                    <td>@(task.AssignedTo ?? "-")</td>
-                    <td>
-                        @if (task.Completed)
-                        {
-                            <span class="badge bg-success">Concluída</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-warning">Pendente</span>
-                        }
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-outline-primary">Editar</a>
-                        <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-sm btn-outline-danger">Excluir</a>
-                    </td>
-                </tr>
+
+                        <div class="task-meta">
+                            <div class="task-meta-item">
+                                <i class="bi bi-folder-fill"></i>
+                                <span class="category-badge">@task.Category</span>
+                            </div>
+
+                            @if (task.DueDate.HasValue)
+                            {
+                                <div class="task-meta-item">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <span>Vencimento: @task.DueDate.Value.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(task.AssignedTo))
+                            {
+                                <div class="task-meta-item">
+                                    <i class="bi bi-person-fill"></i>
+                                    <span>@task.AssignedTo</span>
+                                </div>
+                            }
+
+                            @if (task.Tags != null && task.Tags.Any())
+                            {
+                                <div class="task-tags">
+                                    @foreach (var tag in task.Tags)
+                                    {
+                                        <span class="tag">
+                                            <i class="bi bi-tag-fill"></i>
+                                            @tag
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="task-card-footer">
+                        <small class="text-muted">
+                            <i class="bi bi-clock-history"></i>
+                            @task.CreatedAt.ToString("dd/MM/yyyy HH:mm")
+                        </small>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-sm btn-primary">
+                                <i class="bi bi-pencil-fill"></i>
+                                Editar
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@task.Id" method="post" class="d-inline delete-form">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta tarefa?')">
+                                    <i class="bi bi-trash-fill"></i>
+                                    Excluir
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h3>Nenhuma tarefa encontrada</h3>
+                <p>Crie sua primeira tarefa para começar!</p>
+                <a asp-action="Create" class="btn btn-primary mt-3">
+                    <i class="bi bi-plus-lg"></i>
+                    Criar Primeira Tarefa
+                </a>
+            </div>
+        }
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Toggle filters visibility
+        document.getElementById('toggleFilters').addEventListener('click', function() {
+            const filtersSection = document.getElementById('filtersSection');
+            if (filtersSection.style.display === 'none') {
+                filtersSection.style.display = 'block';
+            } else {
+                filtersSection.style.display = 'none';
+            }
+        });
+
+        // Filter functionality
+        function filterTasks() {
+            const priorityFilter = document.getElementById('filterPriority').value;
+            const categoryFilter = document.getElementById('filterCategory').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const searchFilter = document.getElementById('filterSearch').value.toLowerCase();
+
+            const taskCards = document.querySelectorAll('.task-card');
+            let visibleCount = 0;
+
+            taskCards.forEach(card => {
+                const priority = card.getAttribute('data-priority');
+                const category = card.getAttribute('data-category');
+                const status = card.getAttribute('data-status');
+                const title = card.getAttribute('data-title');
+                const description = card.getAttribute('data-description');
+
+                const priorityMatch = !priorityFilter || priority === priorityFilter;
+                const categoryMatch = !categoryFilter || category === categoryFilter;
+                const statusMatch = !statusFilter || status === statusFilter;
+                const searchMatch = !searchFilter || title.includes(searchFilter) || description.includes(searchFilter);
+
+                if (priorityMatch && categoryMatch && statusMatch && searchMatch) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add event listeners to all filters
+        document.getElementById('filterPriority').addEventListener('change', filterTasks);
+        document.getElementById('filterCategory').addEventListener('change', filterTasks);
+        document.getElementById('filterStatus').addEventListener('change', filterTasks);
+        document.getElementById('filterSearch').addEventListener('input', filterTasks);
+
+        // Auto-refresh after form submissions
+        const deleteForms = document.querySelectorAll('.delete-form');
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                // Let the form submit naturally, the redirect will handle refresh
+            });
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+}

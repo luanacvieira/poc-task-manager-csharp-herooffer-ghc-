@@ -1,69 +1,176 @@
-@model TaskManager.Web.Models.TaskItem
+@model TaskManager.Web.DTOs.UpdateTaskDto
 
 @{
     ViewData["Title"] = "Editar Tarefa";
 }
 
-<div class="container mt-4">
-    <h1>Editar Tarefa</h1>
+<!-- Header Section -->
+<div class="page-header">
+    <div class="container">
+        <h1>
+            <i class="bi bi-pencil-square"></i>
+            Editar Tarefa
+        </h1>
+    </div>
+</div>
 
-    <form asp-action="Edit" method="post">
-        <input asp-for="Id" type="hidden" />
-        <input asp-for="UserId" type="hidden" />
-        <input asp-for="CreatedAt" type="hidden" />
-
-        <div class="mb-3">
-            <label asp-for="Title" class="form-label">Título</label>
-            <input asp-for="Title" class="form-control" />
-            <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label">Descrição</label>
-            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label asp-for="Priority" class="form-label">Prioridade</label>
-                <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TaskManager.Web.Models.Priority>()"></select>
-                <span asp-validation-for="Priority" class="text-danger"></span>
+<div class="container">
+    <div class="form-modern">
+        <form asp-action="Edit" method="post" id="editTaskForm">
+            <input asp-for="Id" type="hidden" />
+            <input asp-for="RowVersion" type="hidden" />
+            
+            <!-- Title -->
+            <div class="form-group">
+                <label asp-for="Title" class="form-label">
+                    <i class="bi bi-card-text"></i>
+                    Título *
+                </label>
+                <input asp-for="Title" class="form-control" placeholder="Digite o título da tarefa" />
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label asp-for="Category" class="form-label">Categoria</label>
-                <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<TaskManager.Web.Models.Category>()"></select>
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label asp-for="DueDate" class="form-label">Data de Vencimento</label>
-                <input asp-for="DueDate" type="date" class="form-control" />
-                <span asp-validation-for="DueDate" class="text-danger"></span>
+            <!-- Description -->
+            <div class="form-group">
+                <label asp-for="Description" class="form-label">
+                    <i class="bi bi-align-start"></i>
+                    Descrição
+                </label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Descreva os detalhes da tarefa"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label asp-for="AssignedTo" class="form-label">Atribuída a</label>
-                <input asp-for="AssignedTo" class="form-control" />
-                <span asp-validation-for="AssignedTo" class="text-danger"></span>
+            <!-- Priority and Category -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Priority" class="form-label">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Prioridade *
+                        </label>
+                        <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<TaskManager.Web.Models.Priority>()"></select>
+                        <span asp-validation-for="Priority" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Category" class="form-label">
+                            <i class="bi bi-folder"></i>
+                            Categoria *
+                        </label>
+                        <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<TaskManager.Web.Models.Category>()"></select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="mb-3 form-check">
-            <input asp-for="Completed" type="checkbox" class="form-check-input" />
-            <label asp-for="Completed" class="form-check-label">Concluída</label>
-        </div>
+            <!-- Due Date and Assigned To -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="DueDate" class="form-label">
+                            <i class="bi bi-calendar-event"></i>
+                            Data de Vencimento
+                        </label>
+                        <input asp-for="DueDate" type="date" class="form-control" />
+                        <span asp-validation-for="DueDate" class="text-danger"></span>
+                    </div>
+                </div>
 
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-        </div>
-    </form>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="AssignedTo" class="form-label">
+                            <i class="bi bi-person"></i>
+                            Atribuída a
+                        </label>
+                        <input asp-for="AssignedTo" class="form-control" placeholder="Nome da pessoa responsável" />
+                        <span asp-validation-for="AssignedTo" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="bi bi-tags"></i>
+                    Tags
+                </label>
+                <input type="text" id="tagsInput" class="form-control" placeholder="Digite uma tag e pressione Enter" />
+                <small class="form-text text-muted">Pressione Enter para adicionar cada tag</small>
+                <div id="tagsContainer" class="task-tags mt-2"></div>
+                <input type="hidden" id="tagsHidden" name="Tags" value="" />
+            </div>
+
+            <!-- Completed Status -->
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="Completed" type="checkbox" class="form-check-input" id="completedCheck" />
+                    <label asp-for="Completed" class="form-check-label" for="completedCheck">
+                        <i class="bi bi-check-circle"></i>
+                        Marcar como concluída
+                    </label>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-lg"></i>
+                    Salvar Alterações
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i>
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Tags functionality
+        let tags = @Html.Raw(Json.Serialize(Model.Tags ?? new List<string>()));
+        const tagsInput = document.getElementById('tagsInput');
+        const tagsContainer = document.getElementById('tagsContainer');
+        const tagsHidden = document.getElementById('tagsHidden');
+
+        // Initialize tags display
+        updateTagsDisplay();
+
+        tagsInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const tag = tagsInput.value.trim();
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    updateTagsDisplay();
+                    tagsInput.value = '';
+                }
+            }
+        });
+
+        function updateTagsDisplay() {
+            tagsContainer.innerHTML = '';
+            tags.forEach((tag, index) => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'tag';
+                tagElement.innerHTML = `
+                    <i class="bi bi-tag-fill"></i>
+                    ${tag}
+                    <i class="bi bi-x-circle" style="cursor: pointer; margin-left: 0.25rem;" onclick="removeTag(${index})"></i>
+                `;
+                tagsContainer.appendChild(tagElement);
+            });
+            tagsHidden.value = tags.join(',');
+        }
+
+        function removeTag(index) {
+            tags.splice(index, 1);
+            updateTagsDisplay();
+        }
+    </script>
 }

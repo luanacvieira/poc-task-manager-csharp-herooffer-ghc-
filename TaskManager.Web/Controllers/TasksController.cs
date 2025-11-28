@@ -49,8 +49,17 @@ public class TasksController : Controller
     // POST: /Tasks/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateTaskDto createDto)
+    public async Task<IActionResult> Create(CreateTaskDto createDto, string Tags)
     {
+        // Parse tags from comma-separated string
+        if (!string.IsNullOrEmpty(Tags))
+        {
+            createDto.Tags = Tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(t => t.Trim())
+                .Where(t => !string.IsNullOrEmpty(t))
+                .ToList();
+        }
+
         // Validações adicionais de segurança
         if (createDto != null)
         {
@@ -160,8 +169,17 @@ public class TasksController : Controller
     // POST: /Tasks/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(long id, UpdateTaskDto updateDto)
+    public async Task<IActionResult> Edit(long id, UpdateTaskDto updateDto, string Tags)
     {
+        // Parse tags from comma-separated string
+        if (!string.IsNullOrEmpty(Tags))
+        {
+            updateDto.Tags = Tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(t => t.Trim())
+                .Where(t => !string.IsNullOrEmpty(t))
+                .ToList();
+        }
+
         if (id != updateDto.Id)
         {
             return BadRequest();

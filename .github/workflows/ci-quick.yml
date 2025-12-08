@@ -1,0 +1,61 @@
+name: CI/CD - Quick Test & Build
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  MIN_SUCCESS_RATE: 80
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET ${{ env.DOTNET_VERSION }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      
+    - name: Test
+      run: |
+        dotnet test --no-build --configuration Release \
+          --logger "console;verbosity=detailed" \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./coverage
+          
+    - name: Validate Success Rate
+      run: |
+        # Count test results from output
+        PASSED=$(dotnet test --no-build -c Release --logger "console;verbosity=minimal" 2>&1 | grep -oP "Passed! .* \K\d+(?= passed)" || echo "0")
+        TOTAL=$(dotnet test --no-build -c Release --logger "console;verbosity=minimal" 2>&1 | grep -oP "Passed! .* total:\K\d+" || echo "1")
+        
+        if [ "$TOTAL" -eq 0 ]; then
+          echo "No tests found!"
+          exit 1
+        fi
+        
+        SUCCESS_RATE=$(awk "BEGIN {printf \"%.0f\", ($PASSED / $TOTAL) * 100}")
+        
+        echo "Tests: $PASSED/$TOTAL passed ($SUCCESS_RATE%)"
+        echo "Minimum required: ${{ env.MIN_SUCCESS_RATE }}%"
+        
+        if [ "$SUCCESS_RATE" -lt "${{ env.MIN_SUCCESS_RATE }}" ]; then
+          echo "❌ FAILED: Success rate below minimum"
+          exit 1
+        fi
+        
+        echo "✅ SUCCESS: Tests meet minimum requirement"
+

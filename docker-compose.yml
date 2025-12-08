@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # SQL Server Database
   sqlserver:
@@ -10,7 +8,7 @@ services:
       - SA_PASSWORD=YourStrong@Passw0rd
       - MSSQL_PID=Developer
     ports:
-      - "1433:1433"
+      - "0.0.0.0:1433:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
     healthcheck:
@@ -30,10 +28,10 @@ services:
     container_name: taskmanager-tasks-service
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
       - ConnectionStrings__TasksConnection=Server=sqlserver;Database=TasksDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=true
     ports:
-      - "8080:8080"
+      - "0.0.0.0:8080:8080"
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -49,10 +47,10 @@ services:
     container_name: taskmanager-statistics-service
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8081
+      - ASPNETCORE_URLS=http://0.0.0.0:8081
       - ConnectionStrings__StatisticsConnection=Server=sqlserver;Database=TasksDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=true
     ports:
-      - "8081:8081"
+      - "0.0.0.0:8081:8081"
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -70,9 +68,9 @@ services:
     container_name: taskmanager-api-gateway
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8082
+      - ASPNETCORE_URLS=http://0.0.0.0:8082
     ports:
-      - "8082:8082"
+      - "0.0.0.0:8082:8082"
     depends_on:
       - tasks-service
       - statistics-service
@@ -88,10 +86,10 @@ services:
     container_name: taskmanager-frontend
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8083
+      - ASPNETCORE_URLS=http://0.0.0.0:8083
       - ApiGateway__BaseUrl=http://api-gateway:8082
     ports:
-      - "8083:8083"
+      - "0.0.0.0:8083:8083"
     depends_on:
       - api-gateway
     networks:

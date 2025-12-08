@@ -39,11 +39,6 @@ public class StatisticsDbContext : DbContext
                 .IsRequired()
                 .HasConversion<string>();
 
-            entity.Property(e => e.Tags)
-                .HasConversion(
-                    v => string.Join(',', v),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-                );
 
             entity.Property(e => e.AssignedTo)
                 .HasMaxLength(100);
@@ -58,8 +53,7 @@ public class StatisticsDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .IsRequired();
 
-            entity.Property(e => e.UpdatedAt)
-                .IsRequired();
+            entity.Property(e => e.UpdatedAt);
         });
     }
 }

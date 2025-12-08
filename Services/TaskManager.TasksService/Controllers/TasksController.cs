@@ -55,6 +55,9 @@ public class TasksController : ControllerBase
     {
         try
         {
+            if (task == null)
+                return BadRequest("Task cannot be null");
+                
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 

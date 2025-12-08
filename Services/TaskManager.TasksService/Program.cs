@@ -9,11 +9,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configure Database
-builder.Services.AddDbContext<TasksDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("TasksConnection"),
-        sqlOptions => sqlOptions.EnableRetryOnFailure()));
+// Configure Database - Only register SqlServer if NOT in Testing environment
+if (builder.Environment.EnvironmentName != "Testing")
+{
+    builder.Services.AddDbContext<TasksDbContext>(options =>
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("TasksConnection"),
+            sqlOptions => sqlOptions.EnableRetryOnFailure()));
+}
 
 // Register repositories
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
@@ -31,11 +34,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Create database if not exists
-using (var scope = app.Services.CreateScope())
+// Create database if not exists (skip in testing environment)
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<TasksDbContext>();
-    dbContext.Database.EnsureCreated();
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<TasksDbContext>();
+        dbContext.Database.EnsureCreated();
+    }
 }
 
 // Configure the HTTP request pipeline.

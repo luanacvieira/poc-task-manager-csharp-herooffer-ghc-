@@ -15,7 +15,9 @@ public class TaskRepository : ITaskRepository
 
     public async Task<IEnumerable<TaskItem>> GetAllAsync()
     {
-        return await _context.Tasks.ToListAsync();
+        return await _context.Tasks
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
     }
 
     public async Task<TaskItem?> GetByIdAsync(long id)

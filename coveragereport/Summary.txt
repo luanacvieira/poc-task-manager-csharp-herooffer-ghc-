@@ -1,0 +1,27 @@
+Summary
+  Generated on: 08/12/2025 - 17:06:59
+  Coverage date: 08/12/2025 - 16:57:09 - 08/12/2025 - 17:06:48
+  Parser: MultiReport (4x Cobertura)
+  Assemblies: 1
+  Classes: 5
+  Files: 5
+  Line coverage: 78.3%
+  Covered lines: 185
+  Uncovered lines: 51
+  Coverable lines: 236
+  Total lines: 393
+  Branch coverage: 68.4% (26 of 38)
+  Covered branches: 26
+  Total branches: 38
+  Method coverage: 96.7% (30 of 31)
+  Full method coverage: 77.4% (24 of 31)
+  Covered methods: 30
+  Fully covered methods: 24
+  Total methods: 31
+
+TaskManager.TasksService                                 78.3%
+  Program                                                46.8%
+  TaskManager.TasksService.Controllers.TasksController   67.1%
+  TaskManager.TasksService.Data.TasksDbContext           94.8%
+  TaskManager.TasksService.Models.TaskItem                100%
+  TaskManager.TasksService.Repositories.TaskRepository    100%

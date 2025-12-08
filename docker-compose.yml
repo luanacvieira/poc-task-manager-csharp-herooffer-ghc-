@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: taskmanager-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P YourStrong@Passw0rd -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    networks:
+      - taskmanager-network
+
+  # Tasks Service
+  tasks-service:
+    build:
+      context: .
+      dockerfile: Services/TaskManager.TasksService/Dockerfile
+    container_name: taskmanager-tasks-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__TasksConnection=Server=sqlserver;Database=TasksDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=true
+    ports:
+      - "8080:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - taskmanager-network
+    restart: on-failure
+
+  # Statistics Service
+  statistics-service:
+    build:
+      context: .
+      dockerfile: Services/TaskManager.StatisticsService/Dockerfile
+    container_name: taskmanager-statistics-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8081
+      - ConnectionStrings__StatisticsConnection=Server=sqlserver;Database=TasksDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;MultipleActiveResultSets=true
+    ports:
+      - "8081:8081"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      tasks-service:
+        condition: service_started
+    networks:
+      - taskmanager-network
+    restart: on-failure
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Services/TaskManager.ApiGateway/Dockerfile
+    container_name: taskmanager-api-gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8082
+    ports:
+      - "8082:8082"
+    depends_on:
+      - tasks-service
+      - statistics-service
+    networks:
+      - taskmanager-network
+    restart: on-failure
+
+  # Frontend Web Application
+  frontend:
+    build:
+      context: .
+      dockerfile: Services/TaskManager.Frontend/Dockerfile
+    container_name: taskmanager-frontend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8083
+      - ApiGateway__BaseUrl=http://api-gateway:8082
+    ports:
+      - "8083:8083"
+    depends_on:
+      - api-gateway
+    networks:
+      - taskmanager-network
+    restart: on-failure
+
+networks:
+  taskmanager-network:
+    driver: bridge
+
+volumes:
+  sqlserver-data:
+

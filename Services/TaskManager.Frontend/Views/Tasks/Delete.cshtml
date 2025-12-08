@@ -1,0 +1,46 @@
+@model TaskManager.Frontend.Models.TaskItem
+
+@{
+    ViewData["Title"] = "Excluir Tarefa";
+}
+
+<div class="container mt-4">
+    <h1>Excluir Tarefa</h1>
+
+    <div class="alert alert-warning">
+        <h4>Tem certeza que deseja excluir esta tarefa?</h4>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Título</dt>
+        <dd class="col-sm-9">@Model.Title</dd>
+
+        <dt class="col-sm-3">Descrição</dt>
+        <dd class="col-sm-9">@(Model.Description ?? "-")</dd>
+
+        <dt class="col-sm-3">Prioridade</dt>
+        <dd class="col-sm-9">@Model.Priority</dd>
+
+        <dt class="col-sm-3">Categoria</dt>
+        <dd class="col-sm-9">@Model.Category</dd>
+
+        <dt class="col-sm-3">Data de Vencimento</dt>
+        <dd class="col-sm-9">@(Model.DueDate?.ToString("dd/MM/yyyy") ?? "-")</dd>
+
+        <dt class="col-sm-3">Atribuída a</dt>
+        <dd class="col-sm-9">@(Model.AssignedTo ?? "-")</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">@(Model.Completed ? "Concluída" : "Pendente")</dd>
+
+        <dt class="col-sm-3">Criada em</dt>
+        <dd class="col-sm-9">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input asp-for="Id" type="hidden" />
+        <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+

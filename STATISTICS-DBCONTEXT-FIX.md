@@ -36,8 +36,33 @@ Required properties '{'UpdatedAt'}' are missing for the instance of entity type 
 ### Correção 1: Remover Configuração de Tags
 Removido completamente a configuração da propriedade `Tags` que não existe.
 
-### Correção 2: Tornar UpdatedAt Opcional
+### Correção 2: Tornar UpdatedAt Opcional no DbContext
 Removido `.IsRequired()` para permitir valores nulos.
+
+### Correção 3: Adicionar Valores Padrão nos Testes
+Modificado o método `AddTasksToDatabase` para adicionar automaticamente os campos obrigatórios que faltavam nos testes.
+
+**Código do Teste Corrigido:**
+```csharp
+private async Task AddTasksToDatabase(params TaskItem[] tasks)
+{
+    foreach (var task in tasks)
+    {
+        // Set default values for required fields if not provided
+        if (string.IsNullOrEmpty(task.UserId))
+            task.UserId = "test-user";
+        
+        if (task.CreatedAt == default)
+            task.CreatedAt = DateTime.UtcNow;
+        
+        if (task.UpdatedAt == null)
+            task.UpdatedAt = DateTime.UtcNow;
+        
+        await _context.Tasks.AddAsync(task);
+    }
+    await _context.SaveChangesAsync();
+}
+```
 
 **Código Corrigido:**
 ```csharp
@@ -208,11 +233,14 @@ public class TaskItem
 
 ## 📁 Arquivo Corrigido
 
-**Localização:** `Services/TaskManager.StatisticsService/Data/StatisticsDbContext.cs`
+**Localizações:**
+1. `Services/TaskManager.StatisticsService/Data/StatisticsDbContext.cs`
+2. `Tests/TaskManager.StatisticsService.Tests/Services/StatisticsServiceTests.cs`
 
 **Mudanças:**
-1. ✅ Linha ~38: Removida configuração de `Tags`
-2. ✅ Linha ~56: Removido `.IsRequired()` de `UpdatedAt`
+1. ✅ StatisticsDbContext.cs (Linha ~38): Removida configuração de `Tags`
+2. ✅ StatisticsDbContext.cs (Linha ~56): Removido `.IsRequired()` de `UpdatedAt`
+3. ✅ StatisticsServiceTests.cs (Linha ~220): Adicionado preenchimento automático de campos obrigatórios no helper `AddTasksToDatabase`
 
 ---
 

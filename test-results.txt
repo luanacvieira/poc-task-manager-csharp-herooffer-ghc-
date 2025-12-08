@@ -1,0 +1,96 @@
+  Determinando os projetos a serem restaurados...
+C:\dev\poc-task-manager-csharp-herooffer-ghc\TaskManager.Web\TaskManager.Web.csproj : warning NU1903: O pacote 'Newtonsoft.Json' 12.0.1 tem uma alta vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-5crp-9r3c-p9vr [C:\dev\poc-task-manager-csharp-herooffer-ghc\TaskManager.sln]
+  Todos os projetos est├úo atualizados para restaura├º├úo.
+  TaskManager.TasksService -> C:\dev\poc-task-manager-csharp-herooffer-ghc\Services\TaskManager.TasksService\bin\Debug\net9.0\TaskManager.TasksService.dll
+
+Compila├º├úo com ├¬xito.
+    0 Aviso(s)
+    0 Erro(s)
+
+Tempo Decorrido 00:00:02.84
+  TaskManager.StatisticsService -> C:\dev\poc-task-manager-csharp-herooffer-ghc\Services\TaskManager.StatisticsService\bin\Debug\net9.0\TaskManager.StatisticsService.dll
+
+Compila├º├úo com ├¬xito.
+    0 Aviso(s)
+    0 Erro(s)
+
+Tempo Decorrido 00:00:02.16
+  TaskManager.TasksService -> C:\dev\poc-task-manager-csharp-herooffer-ghc\Services\TaskManager.TasksService\bin\Debug\net9.0\TaskManager.TasksService.dll
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(19,27): error CS7036: N├úo h├í nenhum argumento fornecido que corresponda ao par├ómetro necess├írio 'logger' de 'TasksController.TasksController(ITaskRepository, ILogger<TasksController>)' [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(117,38): error CS1061: ÔÇÿITaskRepositoryÔÇÖ n├úo cont├®m uma defini├º├úo para "AddAsync" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "AddAsync" que aceite um primeiro argumento do tipo ÔÇÿITaskRepositoryÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Repositories\TaskRepositoryTests.cs(107,40): error CS1061: ÔÇÿTaskRepositoryÔÇÖ n├úo cont├®m uma defini├º├úo para "AddAsync" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "AddAsync" que aceite um primeiro argumento do tipo ÔÇÿTaskRepositoryÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(205,62): error CS1503: Argumento 1: n├úo ├® poss├¡vel converter de "System.Threading.Tasks.Task" para "System.Threading.Tasks.Task<bool>" [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(241,38): error CS1061: ÔÇÿITaskRepositoryÔÇÖ n├úo cont├®m uma defini├º├úo para "AddAsync" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "AddAsync" que aceite um primeiro argumento do tipo ÔÇÿITaskRepositoryÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(286,42): error CS1061: ÔÇÿDateTimeAssertionsÔÇÖ n├úo cont├®m uma defini├º├úo para "NotBeNull" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "NotBeNull" que aceite um primeiro argumento do tipo ÔÇÿDateTimeAssertionsÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(287,32): error CS1061: ÔÇÿDateTimeÔÇÖ n├úo cont├®m uma defini├º├úo para "Value" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "Value" que aceite um primeiro argumento do tipo ÔÇÿDateTimeÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+
+FALHA da compila├º├úo.
+
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(19,27): error CS7036: N├úo h├í nenhum argumento fornecido que corresponda ao par├ómetro necess├írio 'logger' de 'TasksController.TasksController(ITaskRepository, ILogger<TasksController>)' [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(117,38): error CS1061: ÔÇÿITaskRepositoryÔÇÖ n├úo cont├®m uma defini├º├úo para "AddAsync" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "AddAsync" que aceite um primeiro argumento do tipo ÔÇÿITaskRepositoryÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Repositories\TaskRepositoryTests.cs(107,40): error CS1061: ÔÇÿTaskRepositoryÔÇÖ n├úo cont├®m uma defini├º├úo para "AddAsync" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "AddAsync" que aceite um primeiro argumento do tipo ÔÇÿTaskRepositoryÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(205,62): error CS1503: Argumento 1: n├úo ├® poss├¡vel converter de "System.Threading.Tasks.Task" para "System.Threading.Tasks.Task<bool>" [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(241,38): error CS1061: ÔÇÿITaskRepositoryÔÇÖ n├úo cont├®m uma defini├º├úo para "AddAsync" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "AddAsync" que aceite um primeiro argumento do tipo ÔÇÿITaskRepositoryÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(286,42): error CS1061: ÔÇÿDateTimeAssertionsÔÇÖ n├úo cont├®m uma defini├º├úo para "NotBeNull" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "NotBeNull" que aceite um primeiro argumento do tipo ÔÇÿDateTimeAssertionsÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\Controllers\TasksControllerTests.cs(287,32): error CS1061: ÔÇÿDateTimeÔÇÖ n├úo cont├®m uma defini├º├úo para "Value" e n├úo foi poss├¡vel encontrar nenhum m├®todo de extens├úo "Value" que aceite um primeiro argumento do tipo ÔÇÿDateTimeÔÇÖ (voc├¬ est├í se esquecendo de usar uma diretiva ou uma refer├¬ncia de assembly?) [C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj]
+    0 Aviso(s)
+    7 Erro(s)
+
+Tempo Decorrido 00:00:02.28
+  TaskManager.StatisticsService -> C:\dev\poc-task-manager-csharp-herooffer-ghc\Services\TaskManager.StatisticsService\bin\Debug\net9.0\TaskManager.StatisticsService.dll
+  TaskManager.StatisticsService.Tests -> C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.StatisticsService.Tests\bin\Debug\net9.0\TaskManager.StatisticsService.Tests.dll
+
+Compila├º├úo com ├¬xito.
+    0 Aviso(s)
+    0 Erro(s)
+
+Tempo Decorrido 00:00:02.21
+Compila├º├úo de 08/12/2025 15:50:14 iniciada.
+Execu├º├úo de teste para C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\bin\Debug\net9.0\TaskManager.TasksService.Tests.dll (.NETCoreApp,Version=v9.0)
+Vers├úo do VSTest 18.0.1 (x64)
+
+O arquivo de origem de teste "C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\bin\Debug\net9.0\TaskManager.TasksService.Tests.dll" fornecido n├úo foi encontrado.
+     1>Projeto "C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj" no n├│ 1 (VSTest destino(s)).
+     1>_VSTestConsole:
+         MSB4181: A tarefa "VSTestTask" retornou false, mas n├úo registrou um erro.
+     1>Projeto de compila├º├úo pronto "C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.TasksService.Tests\TaskManager.TasksService.Tests.csproj" (VSTest destino(s)) -- FALHA.
+
+FALHA da compila├º├úo.
+    0 Aviso(s)
+    0 Erro(s)
+
+Tempo Decorrido 00:00:00.64
+Compila├º├úo de 08/12/2025 15:50:15 iniciada.
+Execu├º├úo de teste para C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.StatisticsService.Tests\bin\Debug\net9.0\TaskManager.StatisticsService.Tests.dll (.NETCoreApp,Version=v9.0)
+Vers├úo do VSTest 18.0.1 (x64)
+
+Iniciando execu├º├úo de teste, espere...
+1 arquivos de teste no total corresponderam ao padr├úo especificado.
+C:\dev\poc-task-manager-csharp-herooffer-ghc\Tests\TaskManager.StatisticsService.Tests\bin\Debug\net9.0\TaskManager.StatisticsService.Tests.dll
+[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.11)
+[xUnit.net 00:00:00.86]   Discovering: TaskManager.StatisticsService.Tests
+[xUnit.net 00:00:00.92]   Discovered:  TaskManager.StatisticsService.Tests
+[xUnit.net 00:00:00.92]   Starting:    TaskManager.StatisticsService.Tests
+  Aprovado TaskManager.StatisticsService.Tests.UnitTest1.Test1 [3 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_GroupsByPriorityCorrectly [901 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_HandlesAllTasksCompleted [32 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_IncludesAllCategories [16 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_GroupsByCategoryCorrectly [1 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_CalculatesPendingCorrectly [1 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_WithNoTasks_ReturnsZeroStatistics [3 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_CalculatesCompletedCorrectly [1 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_HandlesAllTasksPending [1 ms]
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_CalculatesTotalCorrectly [1 ms]
+[xUnit.net 00:00:01.93]   Finished:    TaskManager.StatisticsService.Tests
+  Aprovado TaskManager.StatisticsService.Tests.Services.StatisticsServiceTests.GetStatisticsAsync_CalculatesUrgentActiveCorrectly [1 ms]
+
+Execu├º├úo de Teste Bem-sucedida.
+Total de testes: 11
+     Aprovados: 11
+Tempo total: 3,3479 Segundos
+
+Compila├º├úo com ├¬xito.
+    0 Aviso(s)
+    0 Erro(s)
+
+Tempo Decorrido 00:00:04.18

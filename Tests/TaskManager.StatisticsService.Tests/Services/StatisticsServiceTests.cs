@@ -220,6 +220,16 @@ public class StatisticsServiceTests : IDisposable
     {
         foreach (var task in tasks)
         {
+            // Set default values for required fields if not provided
+            if (string.IsNullOrEmpty(task.UserId))
+                task.UserId = "test-user";
+            
+            if (task.CreatedAt == default)
+                task.CreatedAt = DateTime.UtcNow;
+            
+            if (task.UpdatedAt == null)
+                task.UpdatedAt = DateTime.UtcNow;
+            
             await _context.Tasks.AddAsync(task);
         }
         await _context.SaveChangesAsync();

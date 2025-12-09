@@ -83,7 +83,9 @@ public class TaskRepositoryTests : IDisposable
             Title = "New Task",
             UserId = "user1",
             Priority = Priority.Medium,
-            Category = Category.Personal
+            Category = Category.Personal,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         // Act
@@ -105,7 +107,9 @@ public class TaskRepositoryTests : IDisposable
             Title = "Original Title",
             UserId = "user1",
             Priority = Priority.Low,
-            Category = Category.Work
+            Category = Category.Work,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
@@ -113,6 +117,7 @@ public class TaskRepositoryTests : IDisposable
         // Act
         task.Title = "Updated Title";
         task.Priority = Priority.High;
+        task.UpdatedAt = DateTime.UtcNow;
         var result = await _repository.UpdateAsync(task);
 
         // Assert
@@ -205,7 +210,7 @@ public class TaskRepositoryTests : IDisposable
         {
             PageNumber = 1,
             PageSize = 10,
-            Priority = "High"
+            Priority = "Urgent"
         };
 
         // Act
@@ -213,7 +218,7 @@ public class TaskRepositoryTests : IDisposable
 
         // Assert
         result.Items.Should().HaveCount(1);
-        result.Items.First().Priority.Should().Be(Priority.High);
+        result.Items.First().Priority.Should().Be(Priority.Urgent);
     }
 
     [Fact]
@@ -318,10 +323,11 @@ public class TaskRepositoryTests : IDisposable
             {
                 Title = "Task 1",
                 UserId = "user1",
-                Priority = Priority.High,
+                Priority = Priority.Urgent,
                 Category = Category.Work,
                 Completed = false,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             },
             new TaskItem
             {
@@ -330,7 +336,8 @@ public class TaskRepositoryTests : IDisposable
                 Priority = Priority.Medium,
                 Category = Category.Personal,
                 Completed = false,
-                CreatedAt = DateTime.UtcNow.AddDays(-1)
+                CreatedAt = DateTime.UtcNow.AddDays(-1),
+                UpdatedAt = DateTime.UtcNow.AddDays(-1)
             },
             new TaskItem
             {
@@ -339,7 +346,8 @@ public class TaskRepositoryTests : IDisposable
                 Priority = Priority.Low,
                 Category = Category.Other,
                 Completed = true,
-                CreatedAt = DateTime.UtcNow.AddDays(-2)
+                CreatedAt = DateTime.UtcNow.AddDays(-2),
+                UpdatedAt = DateTime.UtcNow.AddDays(-2)
             }
         };
 

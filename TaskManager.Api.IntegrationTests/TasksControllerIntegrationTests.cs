@@ -5,7 +5,10 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using TaskManager.Web.Data;
+using TaskManager.Web.Data.Interceptors;
 using TaskManager.Web.DTOs;
 using TaskManager.Web.Models;
 using TaskManager.Web.Common;
@@ -18,25 +21,54 @@ public class TasksControllerIntegrationTests : IClassFixture<WebApplicationFacto
     private readonly WebApplicationFactory<Program> _factory;
     private readonly IServiceScope _scope;
     private readonly TaskManagerDbContext _context;
+    private readonly string _testDatabaseName = $"TestDb_{Guid.NewGuid()}";
 
     public TasksControllerIntegrationTests(WebApplicationFactory<Program> factory)
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {
+            // Define environment variable para sinalizar que estamos em testes
+            builder.UseEnvironment("IntegrationTest");
+            
+            builder.ConfigureAppConfiguration((context, config) =>
+            {
+                // Adiciona configuração para usar InMemory no teste
+                config.AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["UseInMemoryDatabase"] = "true"
+                });
+            });
+            
             builder.ConfigureServices(services =>
             {
-                // Remove o DbContext existente
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<TaskManagerDbContext>));
-                if (descriptor != null)
+                // Remove o AuditInterceptor
+                var auditInterceptorDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(AuditInterceptor));
+                if (auditInterceptorDescriptor != null)
                 {
-                    services.Remove(descriptor);
+                    services.Remove(auditInterceptorDescriptor);
                 }
 
-                // Adiciona DbContext em memória
+                // Remove o descritor do DbContext options
+                var dbContextOptionsDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<TaskManagerDbContext>));
+                if (dbContextOptionsDescriptor != null)
+                {
+                    services.Remove(dbContextOptionsDescriptor);
+                }
+
+                // Remove o descritor do DbContext
+                var dbContextDescriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(TaskManagerDbContext));
+                if (dbContextDescriptor != null)
+                {
+                    services.Remove(dbContextDescriptor);
+                }
+
+                // Adiciona DbContext em memória com nome único por instância de teste
                 services.AddDbContext<TaskManagerDbContext>(options =>
                 {
-                    options.UseInMemoryDatabase($"TestDb_{Guid.NewGuid()}");
+                    options.UseInMemoryDatabase(_testDatabaseName);
                 });
             });
         });
@@ -190,7 +222,8 @@ public class TasksControllerIntegrationTests : IClassFixture<WebApplicationFacto
         result!.Title.Should().Be("Updated Task");
         result.Completed.Should().BeTrue();
 
-        // Verify in database
+        // Verify in database - need to clear the tracking cache and reload
+        _context.ChangeTracker.Clear();
         var taskInDb = await _context.Tasks.FindAsync(task.Id);
         taskInDb.Should().NotBeNull();
         taskInDb!.Title.Should().Be("Updated Task");
@@ -248,7 +281,8 @@ public class TasksControllerIntegrationTests : IClassFixture<WebApplicationFacto
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-        // Verify deletion in database
+        // Verify deletion in database - need to clear the tracking cache and reload
+        _context.ChangeTracker.Clear();
         var taskInDb = await _context.Tasks.FindAsync(task.Id);
         taskInDb.Should().BeNull();
     }

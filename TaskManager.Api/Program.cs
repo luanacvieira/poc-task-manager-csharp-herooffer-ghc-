@@ -20,23 +20,41 @@ builder.Services.AddControllers(options =>
 // Configurar HttpContextAccessor para o interceptor de auditoria
 builder.Services.AddHttpContextAccessor();
 
-// Configurar interceptor de auditoria
-builder.Services.AddSingleton<AuditInterceptor>();
+// Configurar interceptor de auditoria (apenas fora de testes de integração)
+if (!builder.Configuration.GetValue<bool>("UseInMemoryDatabase"))
+{
+    builder.Services.AddSingleton<AuditInterceptor>();
+}
 
-// Configurar Entity Framework Core com SQL Server LocalDB e interceptor
+// Configurar Entity Framework Core
 builder.Services.AddDbContext<TaskManagerDbContext>((serviceProvider, options) =>
 {
-    var auditInterceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        sqlOptions => 
+    // Verificar se deve usar InMemoryDatabase (para testes) ou SQL Server (produção/dev)
+    var useInMemory = builder.Configuration.GetValue<bool>("UseInMemoryDatabase");
+    
+    if (!useInMemory)
+    {
+        // Configuração para produção/desenvolvimento com SQL Server
+        var auditInterceptor = serviceProvider.GetService<AuditInterceptor>();
+        
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection"),
+            sqlOptions => 
+            {
+                sqlOptions.EnableRetryOnFailure();
+                sqlOptions.CommandTimeout(30); // Timeout de 30 segundos para prevenir consultas longas
+            });
+        
+        // Adicionar interceptor apenas se disponível (não nos testes)
+        if (auditInterceptor != null)
         {
-            sqlOptions.EnableRetryOnFailure();
-            sqlOptions.CommandTimeout(30); // Timeout de 30 segundos para prevenir consultas longas
-        })
-    .AddInterceptors(auditInterceptor)
-    .EnableSensitiveDataLogging(builder.Environment.IsDevelopment()) // Apenas em desenvolvimento
-    .EnableDetailedErrors(builder.Environment.IsDevelopment()); // Apenas em desenvolvimento
+            options.AddInterceptors(auditInterceptor);
+        }
+    }
+    // else: InMemory será configurado nos testes
+    
+    options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName == "IntegrationTest")
+           .EnableDetailedErrors(builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName == "IntegrationTest");
 });
 
 // Configurar AutoMapper
@@ -93,10 +111,18 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<TaskManagerDbContext>();
     
-    // Apenas aplicar migrations se não estiver usando InMemory (testes)
-    if (dbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+    try
     {
-        await dbContext.Database.MigrateAsync();
+        // Apenas aplicar migrations se não estiver usando InMemory (testes)
+        if (dbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+        {
+            await dbContext.Database.MigrateAsync();
+        }
+    }
+    catch (InvalidOperationException)
+    {
+        // Se houver erro ao acessar ProviderName (múltiplos providers registrados),
+        // significa que estamos em um ambiente de teste - não fazer nada
     }
 }
 

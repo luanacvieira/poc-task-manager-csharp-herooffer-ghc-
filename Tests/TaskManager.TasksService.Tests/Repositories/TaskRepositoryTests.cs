@@ -198,15 +198,11 @@ public class TaskRepositoryTests : IDisposable
         var task2 = new TaskItem { Title = "Second", Priority = Priority.Medium, Category = Category.Work, UserId = "user2" };
         var task3 = new TaskItem { Title = "Third", Priority = Priority.High, Category = Category.Work, UserId = "user3" };
         
-        await _context.Tasks.AddAsync(task1);
-        await _context.SaveChangesAsync();
-        await Task.Delay(10);
-        
-        await _context.Tasks.AddAsync(task2);
-        await _context.SaveChangesAsync();
-        await Task.Delay(10);
-        
-        await _context.Tasks.AddAsync(task3);
+        task1.CreatedAt = DateTime.UtcNow.AddMinutes(-2);
+        task2.CreatedAt = DateTime.UtcNow.AddMinutes(-1);
+        task3.CreatedAt = DateTime.UtcNow;
+
+        await _context.Tasks.AddRangeAsync(task1, task2, task3);
         await _context.SaveChangesAsync();
 
         // Act

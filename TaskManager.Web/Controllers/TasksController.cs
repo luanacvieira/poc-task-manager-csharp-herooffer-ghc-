@@ -21,47 +21,67 @@ public class TasksController : Controller
         try
         {
             var tasks = await _taskService.GetAllTasksAsync();
-            return View(tasks);
+            return View(new TasksIndexViewModel
+            {
+                Tasks = tasks.ToList(),
+                NewTask = new TaskItem()
+            });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao carregar lista de tarefas");
-            TempData["Error"] = "Erro ao carregar tarefas";
-            return View(new List<TaskItem>());
+            return View(new TasksIndexViewModel
+            {
+                Tasks = new List<TaskItem>(),
+                NewTask = new TaskItem(),
+                ErrorMessage = "Erro ao carregar tarefas"
+            });
         }
     }
 
     // GET: /Tasks/Create
     public IActionResult Create()
     {
-        return View();
+        return RedirectToAction(nameof(Index));
     }
 
     // POST: /Tasks/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(TaskItem task)
+    public async Task<IActionResult> Create(TasksIndexViewModel viewModel)
     {
+        var task = viewModel.NewTask;
+
+        task.UserId = "default-user";
+        ModelState.Remove("NewTask.UserId");
+
         if (!ModelState.IsValid)
         {
-            return View(task);
+            viewModel.Tasks = (await _taskService.GetAllTasksAsync()).ToList();
+            viewModel.ErrorMessage = "Não foi possível incluir a tarefa. Corrija os campos e tente novamente.";
+            return View(nameof(Index), viewModel);
         }
 
         try
         {
-            // Por enquanto, usar ID de usuário padrão (sem autenticação)
-            task.UserId = "default-user";
+            var currentTasks = (await _taskService.GetAllTasksAsync()).ToList();
+
             task.CreatedAt = DateTime.UtcNow;
             task.UpdatedAt = DateTime.UtcNow;
             await _taskService.CreateTaskAsync(task);
-            TempData["Success"] = "Tarefa criada com sucesso!";
-            return RedirectToAction(nameof(Index));
+            return View(nameof(Index), new TasksIndexViewModel
+            {
+                Tasks = currentTasks,
+                NewTask = new TaskItem(),
+                SuccessMessage = "Tarefa incluída. A lista abaixo nao foi atualizada. Recarregue a pagina para ver o novo item."
+            });
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao criar tarefa");
-            ModelState.AddModelError("", "Erro ao criar tarefa");
-            return View(task);
+            viewModel.Tasks = (await _taskService.GetAllTasksAsync()).ToList();
+            viewModel.ErrorMessage = "Erro ao criar tarefa";
+            return View(nameof(Index), viewModel);
         }
     }
 
